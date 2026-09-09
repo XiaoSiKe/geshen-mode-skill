@@ -72,15 +72,28 @@ class SkillContractTests(unittest.TestCase):
 
     def test_version_is_consistent(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual("0.3.0", version)
-        for path in ("README.md", "SKILL.md", "CHANGELOG.md", "playground/index.html"):
+        self.assertEqual("0.4.0", version)
+        for path in ("README.md", "SKILL.md", "CHANGELOG.md"):
             self.assertIn(version, (ROOT / path).read_text(encoding="utf-8"), path)
+
+    def test_project_is_skill_only(self) -> None:
+        self.assertFalse((ROOT / "playground").exists())
+        self.assertNotIn("试玩", self.readme)
+        self.assertLessEqual(len(self.readme.splitlines()), 220)
+
+    def test_deepening_references_exist(self) -> None:
+        for path in (
+            "references/research-protocol.md",
+            "references/response-recipes.md",
+            "references/quality-rubric.md",
+        ):
+            self.assertTrue((ROOT / path).is_file(), path)
 
     def test_readme_has_humor_and_core(self) -> None:
         for phrase in (
             "三分割味，七分真东西",
-            "AI申请退出群聊",
-            "不是随机发疯",
+            "香蕉表情包",
+            "不能拿段子给证据补妆",
             "6个核心模型",
         ):
             self.assertIn(phrase, self.readme)

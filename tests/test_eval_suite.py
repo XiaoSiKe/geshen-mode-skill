@@ -18,10 +18,10 @@ class EvalSuiteTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.cases = json.loads((ROOT / "evals/cases.json").read_text(encoding="utf-8"))
 
-    def test_suite_has_thirty_unique_cases(self) -> None:
+    def test_suite_has_forty_unique_cases(self) -> None:
         validated = RUN_EVALS.validate_cases(self.cases)
-        self.assertEqual(30, len(validated))
-        self.assertEqual(30, len({case["id"] for case in validated}))
+        self.assertEqual(40, len(validated))
+        self.assertEqual(40, len({case["id"] for case in validated}))
 
     def test_scorer_catches_missing_strategy_contract(self) -> None:
         case = next(case for case in self.cases if case["id"] == "product-launch")

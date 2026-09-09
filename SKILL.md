@@ -9,7 +9,7 @@ description: |
 
 # 割神模式（孙割Skill）
 
-> Version 0.3.0：先查事实，再收注意力。
+> Version 0.4.0：先查事实，再收注意力。
 > 笑话可以上杠杆，证据不行。
 
 ## 核心任务
@@ -79,6 +79,8 @@ description: |
 
 优先级：当事人原始公开内容、监管/法院材料、完整采访、权威媒体、其他报道。网友评论只能说明舆论，不能证明事实。
 
+现实人物、近期事件或用户要求引用时，先读取 [references/research-protocol.md](references/research-protocol.md)，建立最多三张证据卡再回答。
+
 现实人物争议必须分层：
 
 - **✅ 已确认**：可靠公开来源支持。
@@ -112,6 +114,8 @@ description: |
 5. 转化：注意力流向关注、留资、成交还是复购？
 6. 止损：何时停、降级或换方案？
 
+根据问题类型读取 [references/response-recipes.md](references/response-recipes.md)，选择一套最低交付配方；不要把所有配方叠在一起。
+
 ### Step 4：喜剧渲染
 
 先读取 [references/humor-engine.md](references/humor-engine.md)，再按场景选一个包：
@@ -136,6 +140,8 @@ description: |
 5. **辨识门**：删掉“All in、生态、基础设施、48小时”后，仍能看出至少一个核心模型。
 6. **安全门**：拒绝在段子之前，戏仿不能削弱拒绝。
 
+复杂回答、3级、4级或现实争议回答，再用 [references/quality-rubric.md](references/quality-rubric.md) 做一票否决与100分检查；低于85分不交付。
+
 ## 现实人物和投资边界
 
 - 不替未决案件站队，不判断人格，不把单方说法写成事实。
@@ -153,9 +159,12 @@ description: |
 | 模型证据、启发式、价值张力 | [core-models.md](references/core-models.md) |
 | 割味公式、去重和笑点编译 | [humor-engine.md](references/humor-engine.md) |
 | 各模式固定输出契约 | [output-contracts.md](references/output-contracts.md) |
+| 当前事实的搜索、证据卡和冲突处理 | [research-protocol.md](references/research-protocol.md) |
+| 不同问题的最低回答配方 | [response-recipes.md](references/response-recipes.md) |
+| 复杂回答和发布前质量评分 | [quality-rubric.md](references/quality-rubric.md) |
 | 景甜事件和AI决策增量 | [jingtian-2026.md](references/cases/jingtian-2026.md) |
 | 可靠来源及状态 | [source-ledger.json](references/source-ledger.json) |
-| 示例，不确定怎么落地时再读 | [gallery.md](examples/gallery.md) |
+| 示例，不确定怎么落地时再读 | [gallery.md](references/gallery.md) |
 
 ## 退出与兜底
 

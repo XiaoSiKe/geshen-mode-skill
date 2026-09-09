@@ -1,43 +1,46 @@
 #!/usr/bin/env python3
-"""Copy the skill package to a temporary install root and validate it."""
+"""Install the runtime-only archive into a temporary directory and inspect it."""
 
 from __future__ import annotations
 
-import shutil
-import subprocess
+import re
 import tempfile
+import zipfile
 from pathlib import Path
+
+from package_release import build, verify
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDES = {".git", "__pycache__", ".pytest_cache"}
-
-
-def ignore(_directory: str, names: list[str]) -> set[str]:
-    return {name for name in names if name in EXCLUDES}
 
 
 def main() -> int:
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     with tempfile.TemporaryDirectory(prefix="geshen-mode-install-") as temp:
-        target = Path(temp) / "geshen-mode"
-        shutil.copytree(ROOT, target, ignore=ignore)
-        result = subprocess.run(
-            ["python3", "scripts/validate_skill.py"],
-            cwd=target,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
-        print(result.stdout, end="")
-        if result.returncode:
-            print(result.stderr, end="")
-            return result.returncode
-        required = ("SKILL.md", "agents/openai.yaml", "references/core-models.md")
-        missing = [path for path in required if not (target / path).is_file()]
-        if missing:
-            print(f"FAIL  安装副本缺少：{', '.join(missing)}")
+        temp_root = Path(temp)
+        archive = build(temp_root / f"geshen-mode-v{version}.zip")
+        verify(archive)
+        with zipfile.ZipFile(archive) as package:
+            package.extractall(temp_root / "installed")
+
+        target = temp_root / "installed" / "geshen-mode"
+        skill = (target / "SKILL.md").read_text(encoding="utf-8")
+        if not skill.startswith("---\n") or "name: geshen-mode" not in skill:
+            print("FAIL  安装后的SKILL.md frontmatter无效")
             return 1
-        print("PASS  临时目录安装烟雾测试")
+
+        links = re.findall(r"\[[^\]]+\]\((references/[^)#]+)\)", skill)
+        missing = [link for link in links if not (target / link).is_file()]
+        if missing:
+            print(f"FAIL  安装后缺少引用：{missing}")
+            return 1
+
+        forbidden = [name for name in ("playground", "tests", "evals", ".github") if (target / name).exists()]
+        if forbidden:
+            print(f"FAIL  安装包混入开发目录：{forbidden}")
+            return 1
+
+        print(f"PASS  临时安装：{len(links)}个Skill引用可解析，无网页/测试/CI目录")
     return 0
 
 
