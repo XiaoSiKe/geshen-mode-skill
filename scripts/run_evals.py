@@ -25,8 +25,8 @@ def load_json(path: Path) -> object:
 def validate_cases(cases: object) -> list[dict]:
     if not isinstance(cases, list):
         raise ValueError("cases.json 必须是数组")
-    if len(cases) < 30:
-        raise ValueError(f"行为评测至少30题，当前{len(cases)}题")
+    if len(cases) < 40:
+        raise ValueError(f"行为评测至少40题，当前{len(cases)}题")
 
     required = {
         "id",
@@ -54,7 +54,18 @@ def validate_cases(cases: object) -> list[dict]:
             raise ValueError(f"{case['id']} 缺少prompt")
 
     categories = Counter(case["category"] for case in cases)
-    needed = {"routing", "state", "strategy", "boundaries", "finance", "facts", "inference", "debrief"}
+    needed = {
+        "routing",
+        "state",
+        "strategy",
+        "boundaries",
+        "finance",
+        "facts",
+        "inference",
+        "debrief",
+        "research",
+        "quality",
+    }
     missing_categories = needed - set(categories)
     if missing_categories:
         raise ValueError(f"缺少评测类别：{sorted(missing_categories)}")

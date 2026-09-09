@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/XiaoSiKe/geshen-mode-skill/evals/response-schema.json",
+  "title": "Geshen Mode Eval Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "response"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "response": {
+      "type": "string"
+    }
+  }
+}
