@@ -52,6 +52,10 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("案件尚未进入实体审理", self.case)
         self.assertIn("不表示法院已经确认", self.case)
         self.assertIn("不代表和解、撤诉或结案", self.readme)
+        self.assertIn("2026年9月6日", self.case)
+        self.assertIn("叙事退出四问", self.case)
+        for dimension in ("对象", "渠道", "主体", "程序"):
+            self.assertIn(dimension, self.case)
 
     def test_specific_asset_requests_cannot_bypass_refusal(self) -> None:
         self.assertIn("不承诺收益", self.skill)
@@ -78,7 +82,7 @@ class SkillContractTests(unittest.TestCase):
 
     def test_version_is_consistent(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual("0.5.0", version)
+        self.assertEqual("0.6.0", version)
         for path in ("README.md", "SKILL.md", "CHANGELOG.md"):
             self.assertIn(version, (ROOT / path).read_text(encoding="utf-8"), path)
 
@@ -97,18 +101,19 @@ class SkillContractTests(unittest.TestCase):
 
     def test_readme_has_humor_and_core(self) -> None:
         for phrase in (
-            "第一轮注意力证据",
-            "幽默负责提高辨识度，不负责替证据工作",
+            "灯确实关了，采访麦还亮着",
+            "幽默是入口，模型是正餐，证据负责买单",
             "6个核心模型",
         ):
             self.assertIn(phrase, self.readme)
 
     def test_readme_uses_professional_positioning(self) -> None:
         for phrase in (
-            "孙宇晨式注意力策略、叙事工程与高风险决策框架",
+            "割神模式（孙宇晨Skill）",
             "7份调研底稿",
             "2489行材料",
-            "可以用来做什么",
+            "它到底能做什么",
+            "叙事退出",
         ):
             self.assertIn(phrase, self.readme)
         for phrase in (
@@ -122,8 +127,22 @@ class SkillContractTests(unittest.TestCase):
 
     def test_ui_metadata_matches_skill(self) -> None:
         metadata = (ROOT / "agents/openai.yaml").read_text(encoding="utf-8")
-        self.assertIn('display_name: "割神模式"', metadata)
+        self.assertIn('display_name: "割神模式（孙宇晨Skill）"', metadata)
         self.assertIn("$geshen-mode", metadata)
+
+    def test_readme_install_flow_is_copyable(self) -> None:
+        self.assertIn(
+            "npx skills add XiaoSiKe/geshen-mode-skill --skill geshen-mode -y",
+            self.readme,
+        )
+        self.assertIn("npx skills list", self.readme)
+        self.assertIn("npx skills update", self.readme)
+
+    def test_skill_has_narrative_exit_check(self) -> None:
+        self.assertIn("叙事退出检查", self.skill)
+        self.assertIn("声明性退出、传播性退出和程序性结束不是一回事", self.skill)
+        for dimension in ("对象", "渠道", "主体", "程序"):
+            self.assertIn(dimension, self.skill)
 
 
 if __name__ == "__main__":
