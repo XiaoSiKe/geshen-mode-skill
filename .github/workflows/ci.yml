@@ -27,6 +27,15 @@ jobs:
       - name: Check Python syntax
         run: python3 -m compileall -q scripts tests
       - name: Check playground JavaScript
-        run: node --check playground/app.js
+        run: |
+          node --check playground/core.js
+          node --check playground/app.js
+          node --check scripts/run_runtime_evals.mjs
+      - name: Test shared runtime core
+        run: node --test tests/runtime.test.cjs
+      - name: Run executable behavior evals
+        run: node scripts/run_runtime_evals.mjs
       - name: Smoke-test portable install
         run: python3 scripts/smoke_install.py
+      - name: Verify deterministic release package
+        run: python3 scripts/package_release.py --check

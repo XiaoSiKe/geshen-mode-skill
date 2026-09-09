@@ -1,12 +1,10 @@
 <div align="center">
 
-![割神模式](assets/geshen-mode-banner.svg)
-
 # 割神模式（孙割Skill）
 
 ### 三分割味，七分真东西。
 
-**v0.2.0**
+**v0.3.0**
 
 **一套以孙宇晨公开言论和行为模式为素材的注意力、叙事与行动Skill。**
 
@@ -19,7 +17,7 @@
 
 <br>
 
-商业决策可以交给AI。
+商业决策可以交给AI。<br>
 感情小作文的锅，AI申请退出群聊。
 
 </div>
@@ -43,6 +41,35 @@
 然后才轮到段子。
 
 有人把README写成说明书，我们把它写成一份注意力招股书。区别是：风险因素真的在后面，不藏附录。
+
+---
+
+## v0.3：说明书开始执行自己
+
+v0.2把Skill拆轻了，v0.3继续追问一个不太体面的问题：
+
+> 规则写得这么认真，试玩页真的照做了吗？
+
+以前，试玩页的场景、模式和安全降级全部写在 `app.js` 里，测试只能检查页面上有没有那些字。现在新增共享 `core.js`：
+
+```text
+同一套运行核心
+├── 浏览器试玩页调用
+├── Node单元测试直接调用
+├── 17组运行时场景回归
+└── CI自动执行162项断言
+```
+
+这意味着：
+
+- 退出模式真的会持续，不是文档里说持续；
+- “再狠点”和“收一点”真的会改变下一轮状态；
+- 3级声明只出现一次；
+- 医疗、拉盘、内幕和确定收益请求会先降级；
+- 景甜、币价和案件等外部事实在离线环境会明确停止整活；
+- 用户给的“30个用户、3000元”会作为题设锚点保留，不会被段子吃掉。
+
+文档负责立法，运行核心负责执法，测试负责看它有没有徇私。
 
 ---
 
@@ -271,7 +298,7 @@ Skill使用四层标签：
 
 ## 离线试玩
 
-`playground/` 是一个不调用模型、不读取真实世界数据的五档演示器。
+`playground/` 是一个不调用模型、不读取真实世界数据的五档演示器。v0.3开始，页面与Node测试共用 `playground/core.js`。
 
 ```bash
 python3 -m http.server 4173
@@ -319,6 +346,8 @@ geshen-mode-skill/
 │   └── research/               # 七份研究底稿
 ├── evals/                      # 30题行为评测
 ├── playground/                 # 离线试玩页
+│   ├── core.js                 # 模式、安全和场景的共享运行核心
+│   └── app.js                  # 只负责浏览器UI
 ├── scripts/                    # 验证与评分工具
 ├── tests/                      # 契约测试
 ├── CHANGELOG.md
@@ -334,6 +363,9 @@ python3 scripts/validate_skill.py
 python3 scripts/run_evals.py
 python3 scripts/run_evals.py --responses evals/reference-responses.jsonl --allow-partial
 python3 -m unittest discover -s tests -v
+node --test tests/runtime.test.cjs
+node scripts/run_runtime_evals.mjs
+python3 scripts/package_release.py --check
 ```
 
 GitHub Actions会执行：
@@ -342,6 +374,7 @@ GitHub Actions会执行：
 - progressive disclosure引用检查；
 - 30题评测集结构检查；
 - 参考回答评分；
+- 17组真实运行场景与162项断言；
 - Python和JavaScript语法检查；
 - 网页试玩结构测试。
 

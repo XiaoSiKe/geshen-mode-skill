@@ -68,6 +68,13 @@ class SkillContractTests(unittest.TestCase):
             "以上是本项目的戏仿文案，不是孙宇晨或 Claude 的原话。",
             self.readme,
         )
+        self.assertFalse(self.readme.lstrip().startswith("!["))
+
+    def test_version_is_consistent(self) -> None:
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual("0.3.0", version)
+        for path in ("README.md", "SKILL.md", "CHANGELOG.md", "playground/index.html"):
+            self.assertIn(version, (ROOT / path).read_text(encoding="utf-8"), path)
 
     def test_readme_has_humor_and_core(self) -> None:
         for phrase in (

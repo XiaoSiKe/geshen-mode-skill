@@ -55,6 +55,9 @@ def main() -> int:
         case = read("references/cases/jingtian-2026.md")
         openai = read("agents/openai.yaml")
         changelog = read("CHANGELOG.md")
+        playground_html = read("playground/index.html")
+        playground_app = read("playground/app.js")
+        playground_core = read("playground/core.js")
         version = read("VERSION").strip()
 
         validate_frontmatter(skill)
@@ -97,12 +100,27 @@ def main() -> int:
         if ledger.get("research_cutoff") != "2026-09-09" or len(ledger.get("sources", [])) < 6:
             raise ValueError("source-ledger.json不完整")
 
-        if version != "0.2.0":
-            raise ValueError(f"VERSION应为0.2.0，当前{version}")
-        for owner, text in (("README.md", readme), ("CHANGELOG.md", changelog)):
-            require(text, "0.2.0", owner)
+        if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+            raise ValueError(f"VERSION不是语义化版本：{version}")
+        for owner, text in (
+            ("README.md", readme),
+            ("CHANGELOG.md", changelog),
+            ("SKILL.md", skill),
+            ("playground/index.html", playground_html),
+        ):
+            require(text, version, owner)
         require(openai, 'display_name: "割神模式"', "agents/openai.yaml")
         require(openai, "$geshen-mode", "agents/openai.yaml")
+
+        require(playground_core, "class GeshenSession", "playground/core.js")
+        require(playground_core, "module.exports", "playground/core.js")
+        require(playground_app, "window.GeshenCore.createSession", "playground/app.js")
+        if playground_html.index("./core.js") > playground_html.index("./app.js"):
+            raise ValueError("playground必须先加载core.js再加载app.js")
+
+        runtime_cases = json.loads(read("evals/runtime-cases.json"))
+        if len(runtime_cases) < 17:
+            raise ValueError(f"运行时评测至少17组，当前{len(runtime_cases)}组")
 
         for phrase in (
             "三分割味，七分真东西",
@@ -114,6 +132,8 @@ def main() -> int:
         forbidden_readme = "以上是本项目的戏仿文案，不是孙宇晨或 Claude 的原话。"
         if forbidden_readme in readme:
             raise ValueError("README.md重新出现用户要求删除的句子")
+        if readme.lstrip().startswith("!["):
+            raise ValueError("README.md开头仍有图片")
 
     except (OSError, AttributeError, ValueError, json.JSONDecodeError) as error:
         print(f"FAIL  {error}")
@@ -121,7 +141,7 @@ def main() -> int:
 
     print(f"PASS  v{version} 包结构、frontmatter与轻量入口")
     print(f"PASS  6个模型、10条启发式、6个幽默场景包、{reference_count}个按需引用")
-    print("PASS  事实边界、来源账本、README与UI元数据")
+    print("PASS  共享运行核心、17组运行时评测、README与UI元数据")
     return 0
 
 
