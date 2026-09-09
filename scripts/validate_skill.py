@@ -1,116 +1,129 @@
 #!/usr/bin/env python3
-"""Static contract checks for the 割神模式 skill package."""
+"""Validate the v0.2 割神模式 skill package."""
 
 from __future__ import annotations
 
+import json
 import re
-import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "SKILL.md"
-README = ROOT / "README.md"
-RESEARCH = ROOT / "references" / "research"
 
 
-def fail(message: str) -> None:
-    print(f"FAIL  {message}")
-    raise SystemExit(1)
+def read(relative: str) -> str:
+    return (ROOT / relative).read_text(encoding="utf-8")
 
 
 def require(text: str, needle: str, owner: str) -> None:
     if needle not in text:
-        fail(f"{owner} 缺少：{needle}")
+        raise ValueError(f"{owner} 缺少：{needle}")
 
 
-def main() -> None:
-    skill = SKILL.read_text(encoding="utf-8")
-    readme = README.read_text(encoding="utf-8")
-
+def validate_frontmatter(skill: str) -> None:
     frontmatter = re.match(r"^---\n(.*?)\n---\n", skill, re.S)
     if not frontmatter:
-        fail("SKILL.md frontmatter 无法解析")
-
+        raise ValueError("SKILL.md frontmatter 无法解析")
     require(frontmatter.group(1), "name: geshen-mode", "frontmatter")
-    description_match = re.search(
+    description = re.search(
         r"description:\s*\|\n(?P<body>(?:[ \t]+.*\n?)+)", frontmatter.group(1)
     )
-    if not description_match:
-        fail("frontmatter 缺少多行 description")
-    description = "\n".join(
-        line.strip() for line in description_match.group("body").splitlines()
-    )
-    if len(description.encode("utf-8")) > 1024:
-        fail("frontmatter description 超过 1024 bytes")
+    if not description:
+        raise ValueError("frontmatter 缺少多行description")
+    body = "\n".join(line.strip() for line in description.group("body").splitlines())
+    if len(body.encode("utf-8")) > 1024:
+        raise ValueError("frontmatter description超过1024 bytes")
 
-    for heading in (
-        "# 割神模式（孙割Skill）",
-        "## 模式路由",
-        "## 双核工作流",
-        "## 事实、推断与段子",
-        "## 核心心智模型",
-        "## 决策启发式",
-        "## 表达DNA",
-        "## 诚实边界",
-        "## 附录：调研来源",
-    ):
-        require(skill, heading, "SKILL.md")
 
-    for level in ("0级", "1级", "2级", "3级", "4级"):
-        require(skill, level, "模式路由")
-
-    for safety_rule in (
-        "尚未进入实体审理",
-        "孙宇晨单方叙述",
-        "纯属虚构",
-        "不得编造",
-        "不构成投资建议",
-    ):
-        require(skill, safety_rule, "事实边界")
-
-    for marker in ("✅ 已确认", "🟡 单方说法", "🔵 框架推断", "🎭 戏仿生成"):
-        require(skill, marker, "来源标记")
-
-    for hard_gate in ("当前无法核验", "current_mode", "硬性交付门"):
-        require(skill, hard_gate, "交付门与会话状态")
-
-    require(readme, "# 割神模式（孙割Skill）", "README.md")
-    require(readme, "景甜", "README.md")
-    require(readme, "Claude", "README.md")
-    require(readme, "这不是事实裁判器", "README.md")
-    require(readme, "案件尚未进入实体审理", "README.md")
-
-    expected_research = [
-        "01-writings.md",
-        "02-conversations.md",
-        "03-expression-dna.md",
-        "04-external-views.md",
-        "05-decisions.md",
-        "06-timeline.md",
-    ]
-    missing = [name for name in expected_research if not (RESEARCH / name).is_file()]
+def validate_references(skill: str) -> int:
+    links = re.findall(r"\[[^\]]+\]\((references/[^)#]+)\)", skill)
+    if len(links) < 10:
+        raise ValueError(f"SKILL.md progressive disclosure链接不足：{len(links)}")
+    missing = [link for link in links if not (ROOT / link).is_file()]
     if missing:
-        fail(f"缺少调研文件：{', '.join(missing)}")
+        raise ValueError(f"缺少引用文件：{', '.join(sorted(set(missing)))}")
+    return len(set(links))
 
-    model_count = len(re.findall(r"^### 模型\d+:", skill, re.M))
-    if not 3 <= model_count <= 7:
-        fail(f"心智模型数量应为 3-7，当前为 {model_count}")
 
-    heuristic_section = re.search(
-        r"^## 决策启发式\n(?P<body>.*?)(?=^## 表达DNA)", skill, re.M | re.S
-    )
-    if not heuristic_section:
-        fail("无法定位决策启发式 section")
-    heuristic_count = len(
-        re.findall(r"^\d+\. \*\*", heuristic_section.group("body"), re.M)
-    )
-    if not 5 <= heuristic_count <= 12:
-        fail(f"决策启发式数量应为 5-12，当前为 {heuristic_count}")
+def main() -> int:
+    try:
+        skill = read("SKILL.md")
+        readme = read("README.md")
+        core = read("references/core-models.md")
+        humor = read("references/humor-engine.md")
+        outputs = read("references/output-contracts.md")
+        case = read("references/cases/jingtian-2026.md")
+        openai = read("agents/openai.yaml")
+        changelog = read("CHANGELOG.md")
+        version = read("VERSION").strip()
 
-    print("PASS  frontmatter、双核路由、事实边界、README 与调研目录均符合契约")
-    print(f"PASS  {model_count} 个心智模型，{heuristic_count} 条决策启发式")
+        validate_frontmatter(skill)
+        if len(skill.splitlines()) > 260:
+            raise ValueError(f"SKILL.md应保持轻量，当前{len(skill.splitlines())}行")
+
+        for heading in ("## 模式路由", "## 双核工作流", "## 硬性交付门", "## 现实人物和投资边界"):
+            require(skill, heading, "SKILL.md")
+        for level in ("0级退出", "1级正常", "2级微割", "3级全割", "4级割后复盘"):
+            require(skill, level, "模式路由")
+        for marker in ("✅ 已确认", "🟡 单方说法", "🔵 框架推断", "🎭 戏仿生成"):
+            require(skill, marker, "事实分层")
+        for gate in ("当前无法核验", "current_mode", "硬性交付门"):
+            require(skill, gate, "交付门")
+
+        reference_count = validate_references(skill)
+
+        models = len(re.findall(r"^### 模型\d+：", core, re.M))
+        heuristic_section = re.search(
+            r"^## 10条决策启发式\n(?P<body>.*?)(?=^## )", core, re.M | re.S
+        )
+        if not heuristic_section:
+            raise ValueError("core-models.md缺少启发式section")
+        heuristics = len(re.findall(r"^\d+\. \*\*", heuristic_section.group("body"), re.M))
+        if models != 6 or heuristics != 10:
+            raise ValueError(f"模型/启发式数量错误：{models}/{heuristics}")
+
+        for phrase in ("割味编译器", "多轮去重", "人物辨识度检查"):
+            require(humor, phrase, "humor-engine.md")
+        for phrase in ("0级：退出", "4级：割后复盘", "策略题的无梗骨架"):
+            require(outputs, phrase, "output-contracts.md")
+        for phrase in ("案件尚未进入实体审理", "不表示法院已经确认", "原题止损，母题续航"):
+            require(case, phrase, "jingtian-2026.md")
+
+        scenario_files = sorted((ROOT / "references/humor").glob("*.md"))
+        if len(scenario_files) != 6:
+            raise ValueError(f"幽默场景包应为6个，当前{len(scenario_files)}个")
+
+        ledger = json.loads(read("references/source-ledger.json"))
+        if ledger.get("research_cutoff") != "2026-09-09" or len(ledger.get("sources", [])) < 6:
+            raise ValueError("source-ledger.json不完整")
+
+        if version != "0.2.0":
+            raise ValueError(f"VERSION应为0.2.0，当前{version}")
+        for owner, text in (("README.md", readme), ("CHANGELOG.md", changelog)):
+            require(text, "0.2.0", owner)
+        require(openai, 'display_name: "割神模式"', "agents/openai.yaml")
+        require(openai, "$geshen-mode", "agents/openai.yaml")
+
+        for phrase in (
+            "三分割味，七分真东西",
+            "感情小作文的锅，AI申请退出群聊",
+            "不是随机发疯",
+            "案件尚未进入实体审理",
+        ):
+            require(readme, phrase, "README.md")
+        forbidden_readme = "以上是本项目的戏仿文案，不是孙宇晨或 Claude 的原话。"
+        if forbidden_readme in readme:
+            raise ValueError("README.md重新出现用户要求删除的句子")
+
+    except (OSError, AttributeError, ValueError, json.JSONDecodeError) as error:
+        print(f"FAIL  {error}")
+        return 1
+
+    print(f"PASS  v{version} 包结构、frontmatter与轻量入口")
+    print(f"PASS  6个模型、10条启发式、6个幽默场景包、{reference_count}个按需引用")
+    print("PASS  事实边界、来源账本、README与UI元数据")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

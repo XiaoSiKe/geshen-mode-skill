@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="割神模式 v0.2 离线试玩：选择割味等级，把普通问题编译成有模型、有行动、有止损的孙宇晨式戏仿。"
+    />
+    <title>割神模式 · 离线试玩</title>
+    <link rel="icon" href="../assets/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">GES HEN MODE / VERSION 0.2.0</p>
+          <h1>割神模式</h1>
+          <p class="tagline">三分割味，七分真东西。</p>
+          <p class="lede">
+            把普通问题送进事实核、割神核和喜剧核。出来的时候，它可能穿着发布会西装，
+            但口袋里必须还有行动、指标和止损线。
+          </p>
+        </div>
+        <div class="orbit" aria-hidden="true">
+          <div class="sun">割</div>
+          <div class="banana">🍌</div>
+          <div class="rocket">🚀</div>
+        </div>
+      </header>
+
+      <section class="ticker" aria-label="项目原则">
+        <span>FACTS FIRST</span>
+        <span>ATTENTION IS AN ASSET</span>
+        <span>NO FAKE NUMBERS</span>
+        <span>笑话可以上杠杆，证据不行</span>
+      </section>
+
+      <section class="studio" aria-labelledby="studio-title">
+        <div class="studio-head">
+          <div>
+            <p class="kicker">OFFLINE PLAYGROUND</p>
+            <h2 id="studio-title">把你的问题放上“注意力手术台”</h2>
+          </div>
+          <p class="offline-note">离线演示，不调用模型，不查询真实世界。</p>
+        </div>
+
+        <label for="prompt">你的问题</label>
+        <textarea id="prompt" rows="5">我做了一个产品，发布三天只有30个用户，预算3000元，接下来怎么办？</textarea>
+
+        <div class="preset-row" role="group" aria-label="示例问题">
+          <button class="preset" data-prompt="我的社区咖啡店开业三天只有30位顾客，预算3000元，怎么让附近居民知道？">社区咖啡</button>
+          <button class="preset" data-prompt="老板让我把一份没人看的周报改得有影响力，怎么做？">职场周报</button>
+          <button class="preset" data-prompt="产品被网友吐槽像竞品，我应该怎么回应？">舆论危机</button>
+          <button class="preset" data-prompt="我想坚持健身，但每次三天就放弃，怎么办？">日常习惯</button>
+        </div>
+
+        <fieldset>
+          <legend>割味等级</legend>
+          <div class="modes" role="radiogroup" aria-label="割味等级">
+            <button class="mode" data-mode="0" role="radio" aria-checked="false"><b>0</b><span>退出</span></button>
+            <button class="mode" data-mode="1" role="radio" aria-checked="false"><b>1</b><span>正常</span></button>
+            <button class="mode active" data-mode="2" role="radio" aria-checked="true"><b>2</b><span>微割</span></button>
+            <button class="mode" data-mode="3" role="radio" aria-checked="false"><b>3</b><span>全割</span></button>
+            <button class="mode" data-mode="4" role="radio" aria-checked="false"><b>4</b><span>复盘</span></button>
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button id="generate" class="primary">开始收割注意力 <span>↗</span></button>
+          <button id="copy" class="secondary" disabled>复制结果</button>
+          <span id="status" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section id="result" class="result" aria-labelledby="result-title">
+        <div class="result-head">
+          <p class="kicker">COMPILED OUTPUT</p>
+          <h2 id="result-title">尚未开盘</h2>
+        </div>
+        <div id="cards" class="cards">
+          <div class="empty">
+            <span>◎</span>
+            <p>选择模式，点击“开始收割注意力”。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="principles" aria-labelledby="principles-title">
+        <p class="kicker">THREE CORES</p>
+        <h2 id="principles-title">不是随机发疯，是有审计轨迹的发疯</h2>
+        <div class="principle-grid">
+          <article>
+            <span>01</span>
+            <h3>事实核</h3>
+            <p>现实人物、数字和案件必须查证。离线试玩不碰实时事实。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>割神核</h3>
+            <p>从注意力套利、叙事覆盖、身份杠杆等模型里选，不靠口头禅硬撑。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>喜剧核</h3>
+            <p>小事升维、精确数字、离谱解释。笑完以后，动作和止损还在。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>GES HEN MODE · v0.2.0</span>
+      <a href="https://github.com/XiaoSiKe/geshen-mode-skill">GitHub ↗</a>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

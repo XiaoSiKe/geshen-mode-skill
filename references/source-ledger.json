@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "research_cutoff": "2026-09-09",
+  "labels": {
+    "confirmed": "可核验的公开行为或程序口径",
+    "party_claim": "当事人或代理人单方陈述",
+    "framework_inference": "基于模型的推断",
+    "parody": "项目原创戏仿"
+  },
+  "sources": [
+    {
+      "id": "sun-x-jingtian",
+      "title": "孙宇晨《我的女友景甜》X原帖",
+      "url": "https://x.com/justinsuntron/status/2092932777612390850",
+      "date": "2026-08-27",
+      "type": "primary",
+      "confidence": "high",
+      "supports": ["发布行为", "标题", "纯属虚构声明"],
+      "does_not_prove": ["文中关系细节", "款项性质", "医疗安排", "Claude具体对话"]
+    },
+    {
+      "id": "jing-weibo-response",
+      "title": "景甜微博公开回应",
+      "url": "https://www.weibo.com/1270344441/RfrxxAsZz",
+      "date": "2026-08-28",
+      "type": "primary",
+      "confidence": "high",
+      "supports": ["景甜公开立场"],
+      "does_not_prove": ["法院结论", "对孙宇晨长文逐项确认"]
+    },
+    {
+      "id": "thepaper-procedure",
+      "title": "澎湃新闻：律师说明与案件程序",
+      "url": "https://www.thepaper.cn/newsDetail_forward_33962837",
+      "date": "2026-08-27",
+      "type": "secondary_direct_statement",
+      "confidence": "medium_high",
+      "supports": ["代理律师称已立案", "申请财产保全", "管辖权异议", "尚未实体审理"],
+      "does_not_prove": ["法院已确认款项为彩礼", "应否返还", "任何一方实体责任"]
+    },
+    {
+      "id": "ifeng-ai-interview",
+      "title": "凤凰网科技：100%听AI与第一次意见不一",
+      "url": "https://tech.ifeng.com/c/8vx6CqeqjvH",
+      "date": "2026-08-28",
+      "type": "primary_interview",
+      "confidence": "medium_high",
+      "supports": ["孙宇晨公开自述AI使用", "迷茫与质疑AI的表达"],
+      "does_not_prove": ["公司AI规模", "Claude私聊真实性"]
+    },
+    {
+      "id": "sun-x-lights-out",
+      "title": "孙宇晨“关灯”X原帖",
+      "url": "https://x.com/justinsuntron/status/2093501732399849904",
+      "date": "2026-08-29",
+      "type": "primary",
+      "confidence": "high",
+      "supports": ["关灯表态", "称交由司法程序"],
+      "does_not_prove": ["和解", "撤诉", "结案", "永久停止相关表达"]
+    },
+    {
+      "id": "blocktempo-cz",
+      "title": "动区动趋：CZ发言与孙宇晨回应留档",
+      "url": "https://www.blocktempo.com/cz-warns-justin-sun-jing-tian-career-lawsuit-privacy-respect/",
+      "date": "2026-08-29",
+      "type": "secondary_archive",
+      "confidence": "medium",
+      "supports": ["CZ未点名发言", "孙宇晨回复", "传播上下文"],
+      "does_not_prove": ["CZ明确点名双方", "因果动机"]
+    }
+  ]
+}
