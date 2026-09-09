@@ -66,7 +66,7 @@ def main() -> int:
         if len(readme.splitlines()) > 220:
             raise ValueError(f"README.md应保持简洁，当前{len(readme.splitlines())}行")
 
-        for heading in ("## 模式路由", "## 双核工作流", "## 硬性交付门", "## 现实人物和投资边界"):
+        for heading in ("## 模式路由", "## 三层工作流", "## 硬性交付门", "## 现实人物和投资边界"):
             require(skill, heading, "SKILL.md")
         for level in ("0级退出", "1级正常", "2级微割", "3级全割", "4级割后复盘"):
             require(skill, level, "模式路由")
@@ -87,7 +87,7 @@ def main() -> int:
         if models != 6 or heuristics != 10:
             raise ValueError(f"模型/启发式数量错误：{models}/{heuristics}")
 
-        for phrase in ("割味编译器", "多轮去重", "人物辨识度检查"):
+        for phrase in ("五种核心表达公式", "生成顺序", "多轮去重", "保真检查"):
             require(humor, phrase, "humor-engine.md")
         for phrase in ("0级：退出", "4级：割后复盘", "策略题的无梗骨架"):
             require(outputs, phrase, "output-contracts.md")
@@ -123,8 +123,22 @@ def main() -> int:
             if not match or not (ROOT / match.group(1)).is_file():
                 raise ValueError(f"agents/openai.yaml的{icon_key}无效")
 
-        for phrase in ("三分割味，七分真东西", "笑话可以上杠杆，证据不行", "案件尚未进入实体审理"):
+        for phrase in (
+            "孙宇晨式注意力策略、叙事工程与高风险决策框架",
+            "7份调研底稿",
+            "幽默负责提高辨识度，不负责替证据工作",
+            "案件尚未进入实体审理",
+        ):
             require(readme, phrase, "README.md")
+        for phrase in (
+            "三分割味，七分真东西",
+            "这是一套人物思维Skill",
+            "给AI贴一张香蕉表情包",
+            "笑话可以上杠杆，证据不行",
+            "不能拿段子给证据补妆",
+        ):
+            if phrase in readme:
+                raise ValueError(f"README.md仍有待专业化旧文案：{phrase}")
         if "试玩" in readme or "playground" in readme.lower():
             raise ValueError("README.md仍包含试玩页定位")
         if (ROOT / "playground").is_dir() and any((ROOT / "playground").iterdir()):
@@ -136,7 +150,7 @@ def main() -> int:
         print(f"FAIL  {error}")
         return 1
 
-    print(f"PASS  v{version} 纯Skill结构、frontmatter和精简README")
+    print(f"PASS  v{version} 纯Skill结构、专业化frontmatter和精简README")
     print(f"PASS  6个模型、10条启发式、6个幽默场景包、{reference_count}个按需引用")
     print("PASS  研究协议、回答配方、质量量表、40题评测与UI元数据")
     return 0

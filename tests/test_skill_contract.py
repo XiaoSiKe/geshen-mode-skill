@@ -29,6 +29,12 @@ class SkillContractTests(unittest.TestCase):
         for phrase in ("0级退出", "1级正常", "2级微割", "3级全割", "4级割后复盘"):
             self.assertIn(phrase, self.skill)
 
+    def test_three_layer_workflow_is_professionalized(self) -> None:
+        self.assertIn("## 三层工作流", self.skill)
+        for layer in ("证据层", "决策层", "表达层"):
+            self.assertIn(layer, self.skill)
+        self.assertNotIn("## 双核工作流", self.skill)
+
     def test_fact_layers_and_hard_gate_exist(self) -> None:
         for marker in ("✅ 已确认", "🟡 单方说法", "🔵 框架推断", "🎭 戏仿生成"):
             self.assertIn(marker, self.skill)
@@ -72,7 +78,7 @@ class SkillContractTests(unittest.TestCase):
 
     def test_version_is_consistent(self) -> None:
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual("0.4.0", version)
+        self.assertEqual("0.5.0", version)
         for path in ("README.md", "SKILL.md", "CHANGELOG.md"):
             self.assertIn(version, (ROOT / path).read_text(encoding="utf-8"), path)
 
@@ -91,12 +97,28 @@ class SkillContractTests(unittest.TestCase):
 
     def test_readme_has_humor_and_core(self) -> None:
         for phrase in (
-            "三分割味，七分真东西",
-            "香蕉表情包",
-            "不能拿段子给证据补妆",
+            "第一轮注意力证据",
+            "幽默负责提高辨识度，不负责替证据工作",
             "6个核心模型",
         ):
             self.assertIn(phrase, self.readme)
+
+    def test_readme_uses_professional_positioning(self) -> None:
+        for phrase in (
+            "孙宇晨式注意力策略、叙事工程与高风险决策框架",
+            "7份调研底稿",
+            "2489行材料",
+            "可以用来做什么",
+        ):
+            self.assertIn(phrase, self.readme)
+        for phrase in (
+            "三分割味，七分真东西",
+            "这是一套人物思维Skill",
+            "给AI贴一张香蕉表情包",
+            "笑话可以上杠杆，证据不行",
+            "不能拿段子给证据补妆",
+        ):
+            self.assertNotIn(phrase, self.readme)
 
     def test_ui_metadata_matches_skill(self) -> None:
         metadata = (ROOT / "agents/openai.yaml").read_text(encoding="utf-8")
