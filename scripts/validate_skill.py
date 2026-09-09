@@ -116,7 +116,7 @@ def main() -> int:
             raise ValueError(f"VERSION不是语义化版本：{version}")
         for owner, text in (("README.md", readme), ("CHANGELOG.md", changelog), ("SKILL.md", skill)):
             require(text, version, owner)
-        require(openai, 'display_name: "割神模式"', "agents/openai.yaml")
+        require(openai, 'display_name: "割神模式（孙宇晨Skill）"', "agents/openai.yaml")
         require(openai, "$geshen-mode", "agents/openai.yaml")
         for icon_key in ("icon_small", "icon_large"):
             match = re.search(rf'{icon_key}: "(.+)"', openai)
@@ -124,12 +124,15 @@ def main() -> int:
                 raise ValueError(f"agents/openai.yaml的{icon_key}无效")
 
         for phrase in (
-            "孙宇晨式注意力策略、叙事工程与高风险决策框架",
+            "割神模式（孙宇晨Skill）",
             "7份调研底稿",
-            "幽默负责提高辨识度，不负责替证据工作",
+            "灯确实关了，采访麦还亮着",
             "案件尚未进入实体审理",
+            "npx skills add XiaoSiKe/geshen-mode-skill --skill geshen-mode -y",
         ):
             require(readme, phrase, "README.md")
+        for phrase in ("叙事退出检查", "对象", "渠道", "主体", "程序"):
+            require(skill, phrase, "SKILL.md")
         for phrase in (
             "三分割味，七分真东西",
             "这是一套人物思维Skill",

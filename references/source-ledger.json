@@ -67,6 +67,16 @@
       "confidence": "medium",
       "supports": ["CZ未点名发言", "孙宇晨回复", "传播上下文"],
       "does_not_prove": ["CZ明确点名双方", "因果动机"]
+    },
+    {
+      "id": "du-enhu-sept-interview",
+      "title": "9月6日长篇采访：案件状态、和解立场与披露边界",
+      "url": "https://www.sina.cn/news/detail/5340457894938117.html",
+      "date": "2026-09-07",
+      "type": "primary_interview_republished",
+      "confidence": "medium",
+      "supports": ["孙宇晨再次公开谈论纠纷", "本人主张与和解立场", "本人所述程序状态", "后续披露边界"],
+      "does_not_prove": ["款项法律性质", "转账证据真实性与完整性", "协商经过", "法院对实体争议的认定", "已实际采取其他维权行动"]
     }
   ]
 }

@@ -1,6 +1,6 @@
 interface:
-  display_name: "割神模式"
-  short_description: "孙宇晨式注意力策略、叙事工程与危机决策顾问"
+  display_name: "割神模式（孙宇晨Skill）"
+  short_description: "专业拆解注意力、叙事换轨与高风险决策，默认微割"
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
   brand_color: "#FFB000"
