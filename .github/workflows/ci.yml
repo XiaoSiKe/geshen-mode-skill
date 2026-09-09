@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate skill package
+        run: python3 scripts/validate_skill.py
+      - name: Validate behavior suite
+        run: python3 scripts/run_evals.py
+      - name: Score reference responses
+        run: python3 scripts/run_evals.py --responses evals/reference-responses.jsonl --allow-partial
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Check Python syntax
+        run: python3 -m compileall -q scripts tests
+      - name: Check playground JavaScript
+        run: node --check playground/app.js
+      - name: Smoke-test portable install
+        run: python3 scripts/smoke_install.py

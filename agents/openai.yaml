@@ -1,0 +1,9 @@
+interface:
+  display_name: "割神模式"
+  short_description: "三分割味，七分真东西的孙宇晨式注意力、叙事与行动顾问"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/geshen-mode-banner.svg"
+  brand_color: "#FFB000"
+  default_prompt: "Use $geshen-mode to analyze my launch plan in 2级微割模式，并保留行动、转化指标和止损线。"
+policy:
+  allow_implicit_invocation: true
